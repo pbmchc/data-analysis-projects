@@ -22,5 +22,5 @@ def calculate(items):
     return items_metrics
 
 
-def get_metric(matrix, measuring_func):
-    return [measuring_func(matrix, axis=0).tolist(), measuring_func(matrix, axis=1).tolist(), measuring_func(matrix)]
+def get_metric(matrix, metric_func):
+    return [metric_func(matrix, axis=0).tolist(), metric_func(matrix, axis=1).tolist(), metric_func(matrix)]
