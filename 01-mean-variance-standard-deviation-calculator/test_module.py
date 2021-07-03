@@ -15,6 +15,7 @@ class UnitTests(unittest.TestCase):
             'sum': [[11, 15, 9], [10, 12, 13], 35]
         }
 
+        self.assertMetricDictsAlmostEqual(actual, expected, "Expected different output when calling 'calculate()' with '[2,6,2,8,4,0,1,5,7]'")
         self.assertAlmostEqual(actual, expected, "Expected different output when calling 'calculate()' with '[2,6,2,8,4,0,1,5,7]'")
 
     def test_calculate2(self):
@@ -28,10 +29,25 @@ class UnitTests(unittest.TestCase):
             'sum': [[14, 13, 8], [15, 9, 11], 35]
         }
 
+        self.assertMetricDictsAlmostEqual(actual, expected, "Expected different output when calling 'calculate()' with '[9,1,5,3,3,3,2,9,0]'")
         self.assertAlmostEqual(actual, expected, "Expected different output when calling 'calculate()' with '[9,1,5,3,3,3,2,9,0]'")
 
     def test_calculate_with_few_digits(self):
         self.assertRaisesRegex(ValueError, "List must contain nine numbers.", mean_var_std.calculate, [2, 6, 2, 8, 4, 0, 1, ])
+
+    def assertMetricDictsAlmostEqual(self, actual_dict, expected_dict, msg=None, places=7):
+        self.assertIsInstance(actual_dict, dict, 'Result is not a dictionary')
+        self.assertEqual(actual_dict.keys(), expected_dict.keys(), 'Dictionaries have different keys')
+
+        for metric, results in actual_dict.items():
+            self.assertIsInstance(results, list, 'Metric {} is not a list'.format(metric))
+
+            for actual_result, expected_result in zip(results, expected_dict[metric]):
+                if isinstance(actual_result, list):
+                    for actual, expected in zip(actual_result, expected_result):
+                        self.assertAlmostEqual(actual, expected, msg=msg, places=places)
+                else:
+                    self.assertAlmostEqual(actual_result, expected_result, msg=msg, places=places)
 
 
 if __name__ == "__main__":
