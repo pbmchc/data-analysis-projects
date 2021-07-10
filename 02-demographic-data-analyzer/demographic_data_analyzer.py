@@ -21,8 +21,6 @@ def calculate_demographic_data(print_data=True):
 
     # What percentage of people with advanced education (`Bachelors`, `Masters`, or `Doctorate`) make more than 50K?
     # What percentage of people without advanced education make more than 50K?
-
-    # with and without `Bachelors`, `Masters`, or `Doctorate`
     higher_education_selector = (df['education'] == 'Bachelors') | (df['education'] == 'Masters') | (df['education'] == 'Doctorate')
     df_higher_education = df[higher_education_selector]
     df_lower_education = df[~higher_education_selector]
@@ -45,7 +43,6 @@ def calculate_demographic_data(print_data=True):
     countries_counts = df['native-country'].value_counts()
     countries_high_salary_counts = df_high_salary['native-country'].value_counts()
     countries_high_salary_percentages = round_decimal(countries_high_salary_counts / countries_counts * 100)
-
     highest_earning_country = countries_high_salary_percentages.idxmax()
     highest_earning_country_percentage = countries_high_salary_percentages.max()
 
