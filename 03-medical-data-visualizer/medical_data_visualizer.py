@@ -3,17 +3,23 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Import data
-df = None
+FILE_PATH = 'medical_examination.csv'
 
-# Add 'overweight' column
-df['overweight'] = None
 
-# Normalize data by making 0 always good and 1 always bad. If the value of 'cholesterol' or 'gluc' is 1, make the value 0. If the value is more than 1, make the value 1.
+def init_data():
+    df = pd.read_csv(FILE_PATH)
+
+    df['overweight'] = _get_df_overweight(df)
+    df['cholesterol'] = _map_series_to_binary(df['cholesterol'])
+    df['gluc'] = _map_series_to_binary(df['gluc'])
+
+    return df
 
 
 # Draw Categorical Plot
 def draw_cat_plot():
+    df = init_data()
+
     # Create DataFrame for cat plot using `pd.melt` using just the values from 'cholesterol', 'gluc', 'smoke', 'alco', 'active', and 'overweight'.
     df_cat = None
 
@@ -32,6 +38,8 @@ def draw_cat_plot():
 
 # Draw Heat Map
 def draw_heat_map():
+    df = init_data()
+
     # Clean the data
     df_heat = None
 
@@ -49,3 +57,16 @@ def draw_heat_map():
     # Do not modify the next two lines
     fig.savefig('heatmap.png')
     return fig
+
+
+def _get_df_overweight(df):
+    return (_get_df_bmi(df) > 25).astype(int)
+
+
+def _get_df_bmi(df):
+    return df['weight'] / ((df['height'] / 100) ** 2)
+
+
+def _map_series_to_binary(series, threshold=1):
+    return (series > threshold).astype(int)
+
