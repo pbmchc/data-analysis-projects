@@ -16,23 +16,18 @@ def init_data():
     return df
 
 
-# Draw Categorical Plot
 def draw_cat_plot():
     df = init_data()
 
-    # Create DataFrame for cat plot using `pd.melt` using just the values from 'cholesterol', 'gluc', 'smoke', 'alco', 'active', and 'overweight'.
-    df_cat = None
+    df_cat = pd.melt(df, id_vars=['cardio'], value_vars=['cholesterol', 'gluc', 'smoke', 'alco', 'active', 'overweight'])
+    df_cat_grouped = df_cat.groupby(['cardio', 'variable', 'value'], as_index=False)
+    df_cat_grouped_with_total = df_cat_grouped.agg(total=pd.NamedAgg(column="value", aggfunc="count"))
 
-    # Group and reformat the data to split it by 'cardio'. Show the counts of each feature. You will have to rename one of the columns for the catplot to work correctly.
-    df_cat = None
+    sns.set_theme()
+    g = sns.catplot(x='variable', y='total', col='cardio', hue='value', data=df_cat_grouped_with_total, kind='bar')
+    fig = g.fig
 
-    # Set up the matplotlib figure
-    fig, ax = None
-
-    # Draw the catplot with 'sns.catplot()'
-
-    # Do not modify the next two lines
-    fig.savefig('catplot.png')
+    fig.savefig('catplot.png', bbox_inches='tight', pad_inches=0.25)
     return fig
 
 
