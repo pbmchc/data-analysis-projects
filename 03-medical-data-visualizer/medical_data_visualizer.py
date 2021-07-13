@@ -35,22 +35,23 @@ def draw_cat_plot():
 def draw_heat_map():
     df = init_data()
 
-    # Clean the data
-    df_heat = None
+    height_lower_limit, health_upper_limit = _get_df_reference_limits(df, 'height')
+    weight_lower_limit, weight_upper_limit = _get_df_reference_limits(df, 'weight')
+    height_reference_limits = height_lower_limit & health_upper_limit
+    weight_reference_limits = weight_lower_limit & weight_upper_limit
+    arterial_pressure_errors = df['ap_lo'] <= df['ap_hi']
 
-    # Calculate the correlation matrix
-    corr = None
+    df_heat = df[height_reference_limits & weight_reference_limits & arterial_pressure_errors]
+    df_corr = df_heat.corr()
 
-    # Generate a mask for the upper triangle
-    mask = None
+    mask = np.zeros_like(df_corr)
+    mask[np.triu_indices_from(mask)] = True
 
-    # Set up the matplotlib figure
-    fig, ax = None
+    sns.set_theme()
+    fig, ax = plt.subplots(figsize=(12, 8))
+    sns.heatmap(df_corr, ax=ax, mask=mask, annot=True, fmt='.1f', center=0, square=True)
 
-    # Draw the heatmap with 'sns.heatmap()'
-
-    # Do not modify the next two lines
-    fig.savefig('heatmap.png')
+    fig.savefig('heatmap.png', bbox_inches='tight', pad_inches=0.25)
     return fig
 
 
@@ -62,6 +63,9 @@ def _get_df_bmi(df):
     return df['weight'] / ((df['height'] / 100) ** 2)
 
 
+def _get_df_reference_limits(df, column):
+    return df[column] >= df[column].quantile(0.025), df[column] <= df[column].quantile(0.975)
+
+
 def _map_series_to_binary(series, threshold=1):
     return (series > threshold).astype(int)
-
