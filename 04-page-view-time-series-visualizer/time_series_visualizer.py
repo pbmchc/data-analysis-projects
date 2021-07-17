@@ -1,26 +1,38 @@
+import platform
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
+
+from date_utils import format_date_boundaries
+
 register_matplotlib_converters()
 
-# Import data (Make sure to parse dates. Consider setting index column to 'date'.)
-df = None
+FILE_PATH = 'fcc-forum-pageviews.csv'
 
-# Clean data
-df = None
+
+def init_data():
+    df = pd.read_csv(FILE_PATH, index_col='date', parse_dates=True)
+    page_views_lower_limit, page_views_upper_limit = _get_df_value_limits(df, 'value')
+
+    return df[page_views_lower_limit & page_views_upper_limit]
 
 
 def draw_line_plot():
-    # Draw line plot
+    df = init_data()
+    df.index.names = ['Date']
+    df_line = df.rename(columns={'value': 'Page Views'})
 
+    date_format = '%#m/%Y' if platform.system() == 'Windows' else '%-m/%Y'
+    from_boundary, to_boundary = format_date_boundaries(df_line.index, date_format)
 
+    sns.set_theme()
+    fig, ax = plt.subplots(figsize=(12, 8))
+    plot_title = f'Daily freeCodeCamp Forum Page Views {from_boundary} - {to_boundary}'
+    sns.lineplot(data=df_line, x='Date', y='Page Views', ax=ax).set_title(plot_title)
 
-
-
-    # Save image and return fig (don't change this part)
     fig.savefig('line_plot.png')
-    return fig
+    return None
 
 
 def draw_bar_plot():
@@ -40,6 +52,7 @@ def draw_bar_plot():
 
 def draw_box_plot():
     # Prepare data for box plots (this part is done!)
+    df = init_data()
     df_box = df.copy()
     df_box.reset_index(inplace=True)
     df_box['year'] = [d.year for d in df_box.date]
@@ -54,3 +67,8 @@ def draw_box_plot():
     # Save image and return fig (don't change this part)
     fig.savefig('box_plot.png')
     return fig
+
+
+def _get_df_value_limits(df, column):
+    return df[column] >= df[column].quantile(0.025), df[column] <= df[column].quantile(0.975)
+
