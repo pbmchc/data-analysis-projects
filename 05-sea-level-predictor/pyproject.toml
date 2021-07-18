@@ -1,0 +1,9 @@
+[tool.poetry]
+name = "data-analysis-sea-level-predictor"
+version = "0.1.0"
+description = "An FCC Data Analysis Challenge"
+
+[tool.poetry.dependencies]
+pandas = "*"
+python = "^3.7"
+scipy = "*"
