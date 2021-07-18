@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
 
-from date_utils import get_months_order, format_date_boundaries
+from date_utils import get_months_categorical_order, format_date_boundaries
 
 register_matplotlib_converters()
 
@@ -20,6 +20,7 @@ def init_data():
 
 def draw_line_plot():
     df = init_data()
+
     df.index.names = ['Date']
     df_line = df.rename(columns={'value': 'Page Views'})
 
@@ -46,8 +47,8 @@ def draw_bar_plot():
 
     sns.set_theme()
     fig, ax = plt.subplots(figsize=(12, 8))
-    months_order = get_months_order()
-    sns.barplot(data=df_bar, x='Years', y='Average Page Views', hue='Months', hue_order=months_order, ax=ax, palette="deep")
+    months_order = get_months_categorical_order('%B')
+    sns.barplot(data=df_bar, x='Years', y='Average Page Views', hue='Months', hue_order=months_order, ax=ax, palette='deep')
     plt.legend(loc='upper left')
 
     fig.savefig('bar_plot.png')
@@ -56,17 +57,22 @@ def draw_bar_plot():
 
 def draw_box_plot():
     df = init_data()
+
     df_box = df.reset_index()
-    df_box['year'] = [d.year for d in df_box.date]
-    df_box['month'] = [d.strftime('%b') for d in df_box.date]
+    df_box['Year'] = [d.year for d in df_box.date]
+    df_box['Month'] = [d.strftime('%b') for d in df_box.date]
+    df_box = df_box.rename(columns={'value': 'Page Views'})
 
-    # Draw box plots (using Seaborn)
+    sns.set_theme()
+    fig, axes = plt.subplots(figsize=(24, 8), ncols=2)
 
+    year_plot_title = 'Year-wise Box Plot (Trend)'
+    sns.boxplot(data=df_box, x='Year', y='Page Views', ax=axes[0]).set_title(year_plot_title)
 
+    months_order = get_months_categorical_order('%b')
+    month_plot_title = 'Month-wise Box Plot (Seasonality)'
+    sns.boxplot(data=df_box, x='Month', y='Page Views', order=months_order, ax=axes[1]).set_title(month_plot_title)
 
-
-
-    # Save image and return fig (don't change this part)
     fig.savefig('box_plot.png')
     return fig
 
