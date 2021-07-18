@@ -5,7 +5,8 @@ import matplotlib as mpl
 
 class DataCleaningTestCase(unittest.TestCase):
     def test_data_cleaning(self):
-        actual = int(time_series_visualizer.df.count(numeric_only=True))
+        df = time_series_visualizer.init_data()
+        actual = int(df.count(numeric_only=True))
         expected = 1238
         self.assertEqual(actual, expected, "Expected DataFrame count after cleaning to be 1238.")
 
@@ -75,7 +76,7 @@ class BoxPlotTestCase(unittest.TestCase):
         actual = len(self.fig.get_axes())
         expected = 2
         self.assertEqual(actual, expected, "Expected two box plots in figure.")
-    
+
     def test_box_plot_labels(self):
         actual = self.ax1.get_xlabel()
         expected = "Year"
@@ -114,10 +115,10 @@ class BoxPlotTestCase(unittest.TestCase):
         self.assertEqual(actual, expected, "Expected box plot 1 title to be 'Month-wise Box Plot (Seasonality)'")
 
     def test_box_plot_number_of_boxes(self):
-        actual = len(self.ax1.lines) / 6 # Every box has 6 lines
+        actual = len(self.ax1.lines) / 6  # Every box has 6 lines
         expected = 4
         self.assertEqual(actual, expected, "Expected four boxes in box plot 1")
-        actual = len(self.ax2.lines) / 6 # Every box has 6 lines
+        actual = len(self.ax2.lines) / 6  # Every box has 6 lines
         expected = 12
         self.assertEqual(actual, expected, "Expected 12 boxes in box plot 2")
 
