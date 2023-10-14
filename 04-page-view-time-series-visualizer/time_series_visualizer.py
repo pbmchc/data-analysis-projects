@@ -67,11 +67,11 @@ def draw_box_plot():
     fig, axes = plt.subplots(figsize=(24, 8), ncols=2)
 
     year_plot_title = 'Year-wise Box Plot (Trend)'
-    sns.boxplot(data=df_box, x='Year', y='Page Views', ax=axes[0]).set_title(year_plot_title)
+    sns.boxplot(data=df_box, x='Year', y='Page Views', hue='Year', ax=axes[0], legend=False, palette='deep').set_title(year_plot_title)
 
     months_order = get_months_categorical_order('%b')
     month_plot_title = 'Month-wise Box Plot (Seasonality)'
-    sns.boxplot(data=df_box, x='Month', y='Page Views', order=months_order, ax=axes[1]).set_title(month_plot_title)
+    sns.boxplot(data=df_box, x='Month', y='Page Views', hue='Month', ax=axes[1], legend=False, order=months_order, palette='deep').set_title(month_plot_title)
 
     fig.savefig('box_plot.png')
     return fig
