@@ -2,8 +2,9 @@
 name = "data-analysis-medical-data-visualizer"
 version = "0.1.0"
 description = "An FCC Data Analysis Challenge"
+authors = ["pbmchc"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-pandas = "*"
-seaborn = "*"
+python = "<3.13,>=3.9"
+pandas = "^2.1.1"
+seaborn = "^0.13.0"
