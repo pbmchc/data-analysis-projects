@@ -2,8 +2,10 @@
 name = "data-analysis-sea-level-predictor"
 version = "0.1.0"
 description = "An FCC Data Analysis Challenge"
+authors = ["pbmchc"]
 
 [tool.poetry.dependencies]
-pandas = "*"
-python = "^3.7"
-scipy = "*"
+python = "<3.13,>=3.9"
+matplotlib = "^3.8.0"
+pandas = "^2.1.1"
+scipy = "^1.11.3"

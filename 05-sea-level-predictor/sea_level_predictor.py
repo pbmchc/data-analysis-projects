@@ -46,7 +46,7 @@ def _get_line_of_best_fit(df, predictions_range):
     years = df[YEAR_COLUMN]
     sea_level = df[SEA_LEVEL_COLUMN]
     result = linregress(years, sea_level)
-    years_with_predictions = years.append(predictions_range)
+    years_with_predictions = pd.concat([years, predictions_range])
     sea_level_values = result.slope * years_with_predictions + result.intercept
 
     return years_with_predictions, sea_level_values
